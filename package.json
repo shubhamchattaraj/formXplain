@@ -1,0 +1,14 @@
+{
+  "name": "formxplain",
+  "version": "0.4.5",
+  "private": true,
+  "description": "FormXplain with server-side Gemini summaries and local fallback",
+  "scripts": {
+    "start": "node server.js",
+    "check": "node --check server.js && node --check document-analysis.mjs && node --check summary-analysis.mjs",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
