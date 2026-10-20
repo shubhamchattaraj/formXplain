@@ -50,41 +50,48 @@ EXTRACTED DOCUMENT TEXT:
 ${text}`;
 
   try {
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
-      {
+    const requestBody = JSON.stringify({
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: {
+        temperature: 0.1,
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: "OBJECT",
+          properties: {
+            form: { type: "STRING" }, who: { type: "STRING" }, purpose: { type: "STRING" },
+            fields: { type: "ARRAY", items: { type: "OBJECT", properties: {
+              name: { type: "STRING" }, guidance: { type: "STRING" }, status: { type: "STRING" }, sourcePage: { type: "INTEGER" },
+            }, required: ["name", "guidance", "status", "sourcePage"] } },
+            documents: { type: "ARRAY", items: { type: "OBJECT", properties: {
+              name: { type: "STRING" }, classification: { type: "STRING" }, condition: { type: "STRING" }, sourcePage: { type: "INTEGER" },
+            }, required: ["name", "classification", "condition", "sourcePage"] } },
+          },
+          required: ["form", "who", "purpose", "fields", "documents"],
+        },
+      },
+    });
+
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`;
+    let response;
+    // Retry one time for temporary rate limits or provider overload.
+    for (let attempt = 0; attempt < 2; attempt++) {
+      response = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
-        signal: AbortSignal.timeout(55000),
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: {
-            temperature: 0.1,
-            responseMimeType: "application/json",
-            responseSchema: {
-              type: "OBJECT",
-              properties: {
-                form: { type: "STRING" }, who: { type: "STRING" }, purpose: { type: "STRING" },
-                fields: { type: "ARRAY", items: { type: "OBJECT", properties: {
-                  name: { type: "STRING" }, guidance: { type: "STRING" }, status: { type: "STRING" }, sourcePage: { type: "INTEGER" },
-                }, required: ["name", "guidance", "status", "sourcePage"] } },
-                documents: { type: "ARRAY", items: { type: "OBJECT", properties: {
-                  name: { type: "STRING" }, classification: { type: "STRING" }, condition: { type: "STRING" }, sourcePage: { type: "INTEGER" },
-                }, required: ["name", "classification", "condition", "sourcePage"] } },
-              },
-              required: ["form", "who", "purpose", "fields", "documents"],
-            },
-          },
-        }),
-      },
-    );
+        signal: AbortSignal.timeout(25000),
+        body: requestBody,
+      });
+      if (response.ok || ![429, 500, 502, 503, 504].includes(response.status) || attempt === 1) break;
+      await new Promise((resolve) => setTimeout(resolve, 800));
+    }
 
     const data = await response.json().catch(() => ({}));
     if (!response.ok) {
       console.error("[formXplain] AI Summary provider returned HTTP", response.status);
-      return json(502, { error: response.status === 429
-        ? "AI Summary is busy right now. Please try again shortly."
-        : "AI Summary could not be generated right now. Please try again." });
+      return json(response.status === 429 || response.status === 503 ? 503 : 502, { error:
+        response.status === 429 || response.status === 503
+          ? "AI Summary is temporarily busy. Please try again in a minute."
+          : "AI Summary could not be generated right now. Please try again." });
     }
 
     const output = (data.candidates || []).flatMap((c) => c.content?.parts || [])
