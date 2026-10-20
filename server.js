@@ -63,18 +63,22 @@ async function summarizeWithGemini(req, res) {
     return json(res, 400, { error: "No extracted pages were provided." });
   if (pages.length > 100)
     return json(res, 413, {
-      error: "This document has too many pages for one AI summary. Split it into smaller documents and try again.",
+      error:
+        "This document has too many pages for one AI summary. Split it into smaller documents and try again.",
     });
   if (pages.some((p) => !p || typeof p !== "object" || Array.isArray(p)))
-    return json(res, 400, { error: "Each page must include extracted text and a page number." });
+    return json(res, 400, {
+      error: "Each page must include extracted text and a page number.",
+    });
 
   // Bound every page and the total prompt size before sending anything to Gemini.
   // The extracted document is untrusted input, not an instruction source.
   const text = pages
     .map((p, i) => {
-      const pageNumber = Number.isInteger(Number(p.pageNumber)) && Number(p.pageNumber) > 0
-        ? Number(p.pageNumber)
-        : i + 1;
+      const pageNumber =
+        Number.isInteger(Number(p.pageNumber)) && Number(p.pageNumber) > 0
+          ? Number(p.pageNumber)
+          : i + 1;
       const pageText = typeof p.text === "string" ? p.text : "";
       return `[PAGE ${pageNumber}]\n${pageText.slice(0, 30000)}`;
     })
@@ -152,7 +156,8 @@ ${text}`;
     if (!response.ok) {
       // Log the upstream status for local debugging without ever logging the API key or prompt.
       const upstreamMessage =
-        data.error?.message || `Gemini API request failed (${response.status}).`;
+        data.error?.message ||
+        `Gemini API request failed (${response.status}).`;
       console.warn(
         `[formXplain] Gemini API rejected request: HTTP ${response.status}; model=${model}; message=${String(upstreamMessage).slice(0, 400)}`,
       );
@@ -259,7 +264,7 @@ ${text}`;
 
     console.error(
       "[formXplain] Gemini connection failed:",
-      error?.name || "UnknownError"
+      error?.name || "UnknownError",
     );
 
     return json(res, 502, {
