@@ -4298,8 +4298,7 @@
           >
         </nav>
         <div class="sidebottom">
-          <span class="privacydot"></span>Local-first processing<br />Files stay
-          in this browser session.
+          <span class="privacydot"></span>Private session processing<br />Your document stays in this browser session unless AI Summary is requested.
         </div>
       </aside>
       <div class="main">
@@ -4318,7 +4317,7 @@
             <div class="crumb" id="crumb">Workspace / Dashboard</div>
           </div>
           <div class="topactions">
-            <span class="mode"><span class="dot"></span>LOCAL MODE</span
+            <span class="mode"><span class="dot"></span>DOCUMENT WORKSPACE</span
             ><button class="btn secondary" id="clearTop">
               <i data-lucide="rotate-ccw"></i>Clear
             </button>
@@ -4368,7 +4367,7 @@
                 <h3 class="cardtitle">Start with a document</h3>
                 <p class="cardtext">
                   Upload a PDF, scan a page with OCR, or paste text from an
-                  official notice. Text is processed locally in your browser.
+                  official notice. Text is extracted in your browser before analysis.
                 </p>
                 <a href="#scan" class="btn primary"
                   >Upload or paste <i data-lucide="arrow-right"></i
@@ -4387,7 +4386,7 @@
                   Always verify important conditions with the issuing authority.
                 </p>
                 <div class="notice blue">
-                  Gemini can generate document summaries when configured. Search
+                  AI Summary helps explain document contents. Search
                   and checklist suggestions remain evidence-based helpers;
                   verify important details against the source.
                 </div>
@@ -4420,7 +4419,7 @@
                 <h1>Upload & scan</h1>
                 <p>
                   Extract selectable PDF text and use OCR for scanned pages or
-                  image files. Extraction runs locally in your browser when the
+                  image files. Text extraction runs in your browser when the
                   required libraries are available.
                 </p>
               </div>
@@ -4681,7 +4680,7 @@
                 >
                   <div class="clay guide-intro">
                     <div class="eyebrow">
-                      DOCUMENT-DRIVEN GUIDE · LOCAL ANALYSIS
+                      DOCUMENT-DRIVEN GUIDE · SOURCE-BASED ANALYSIS
                     </div>
                     <h2 id="guideTitle">Form Filling Guide</h2>
                     <p id="guideIntro" class="small muted"></p>
@@ -4700,7 +4699,7 @@
                 </div>
                 <div id="overallSummary" class="summary-section">
                   <div id="summaryModeLabel" class="eyebrow">
-                    LOCAL SUMMARY · FALLBACK MODE
+                    AI SUMMARY · SOURCE HIGHLIGHTS
                   </div>
                   <div class="summary-actions" aria-label="Summary actions">
                     <button
@@ -4799,7 +4798,7 @@
                   include source passages and page numbers when available.
                 </p>
               </div>
-              <span class="tag cyan">Evidence-based local search</span>
+              <span class="tag cyan">Evidence-based document search</span>
             </div>
             <div class="grid two">
               <div class="clay">
@@ -4973,7 +4972,7 @@
                 <div class="eyebrow">CONTROL & TRANSPARENCY</div>
                 <h1>Settings & privacy</h1>
                 <p>
-                  Understand how this prototype handles documents and what it
+                  Understand how this app handles documents and what it
                   can — and cannot — do.
                 </p>
               </div>
@@ -4981,25 +4980,22 @@
             <div class="clay">
               <div class="settingrow">
                 <div>
-                  <strong>Processing mode</strong>
+                  <strong>Document processing</strong>
                   <p>
-                    PDF text extraction and OCR run in the browser. When the
-                    server has a Gemini API key configured, extracted document
-                    text is sent to Google Gemini to generate the summary.
-                    Otherwise, a labelled local fallback is used.
+                    PDF text extraction and OCR run in your browser. When you request an AI Summary, extracted document text is securely sent to the AI service to generate the explanation.
                   </p>
                 </div>
-                <span class="tag green">Local demo</span>
+                <span class="tag green">Browser + AI</span>
               </div>
               <div class="settingrow">
                 <div>
                   <strong>Data retention</strong>
                   <p>
-                    Document text and checklist state live in memory for this
-                    page session. They are not intentionally persisted to
-                    localStorage or sent to a formXplain backend. Third-party
-                    CDN requests occur to load libraries, fonts, and OCR
-                    language data.
+                    Document text and checklist state remain in this page
+                    session. When you request an AI Summary, extracted document
+                    text is sent securely to the AI service for processing.
+                    Third-party CDN requests load required libraries, fonts,
+                    and OCR language data.
                   </p>
                 </div>
                 <span class="tag">Session only</span>
@@ -5019,13 +5015,13 @@
                   <strong>Known limitations</strong>
                   <p>
                     OCR can misread numbers, tables, handwriting, stamps, and
-                    checkboxes. Local summaries and requirement detection are
+                    checkboxes. Automated highlights and requirement detection are
                     heuristic. Search results are not generated answers.
                     Official deadlines and eligibility are not independently
                     verified.
                   </p>
                 </div>
-                <span class="tag amber">Prototype</span>
+                <span class="tag amber">Review source</span>
               </div>
               <div class="settingrow">
                 <div>
@@ -5037,27 +5033,11 @@
                 </div>
                 <span class="small muted">v0.5.0</span>
               </div>
-              <div class="settingrow">
-                <div>
-                  <strong>Project documentation</strong>
-                  <p>
-                    Review the README, setup guide, planning documents, and test
-                    plan in the project folder.
-                  </p>
-                </div>
-                <a
-                  href="/README.md"
-                  target="_blank"
-                  rel="noopener"
-                  class="btn secondary"
-                  >Open README</a
-                >
-              </div>
             </div>
           </section>
           <div class="footer">
             formXplain · Document companion · AI summaries may send extracted
-            text to Google Gemini · Verify official requirements with the
+            text to the AI service · Verify official requirements with the
             issuing authority.
           </div>
         </main>
@@ -5215,7 +5195,7 @@
         $("summaryPages").textContent =
           d.pages.length + " page" + (d.pages.length === 1 ? "" : "s");
         $("summaryMeta").textContent =
-          `${d.type || "Document"} · ${(Number(d.wordCount) || 0).toLocaleString()} words · ${(d.pages || []).filter((p) => p.extractionMethod === "ocr" || p.extractionMethod === "camera-ocr").length} OCR page(s) · ${d.aiSummary ? "Gemini AI summary" : "Local fallback summary"}`;
+          `${d.type || "Document"} · ${(Number(d.wordCount) || 0).toLocaleString()} words · ${(d.pages || []).filter((p) => p.extractionMethod === "ocr" || p.extractionMethod === "camera-ocr").length} OCR page(s) · ${d.aiSummary ? "AI Summary" : "Source highlights"}`;
         $("summaryWarnings").innerHTML = "";
         const warn = [
           ...(d.warnings || []),
@@ -5252,7 +5232,7 @@
         host.innerHTML = "";
         if (d.aiSummary) {
           $("summaryModeLabel").textContent =
-            "AI-GENERATED SUMMARY · GOOGLE GEMINI";
+            "AI SUMMARY";
           const a = d.aiSummary;
           const addAi = (title, items, empty, kind) => {
             const box = document.createElement("div");
@@ -5354,7 +5334,7 @@
             "document",
           );
         } else if (overall) {
-          $("summaryModeLabel").textContent = "LOCAL SUMMARY · FALLBACK MODE";
+          $("summaryModeLabel").textContent = "AI SUMMARY · SOURCE HIGHLIGHTS";
           const add = (
             title,
             items,
@@ -6547,7 +6527,7 @@
           appendText(
             host,
             "p",
-            "The local text detector cannot always infer the exact physical boundary of a perforated form. Check the original page layout and leave official decision fields to the authority.",
+            "The text detector cannot always infer the exact physical boundary of a perforated form. Check the original page layout and leave official decision fields to the authority.",
             "notice",
           );
         }
@@ -6613,10 +6593,9 @@
         btn.textContent = "Preparing summary…";
         $("summaryButtonStatus").classList.remove("error");
         $("summaryButtonStatus").textContent =
-          "Preparing a local summary first. AI enhancement will load if available…";
+          "Preparing your AI Summary…";
 
-        // Always make the local summary visible BEFORE calling Gemini. A slow or
-        // unavailable API must never leave the user staring at a blank summary.
+        // Prepare readable source highlights first so the page remains useful if the AI service is temporarily unavailable.
         try {
           d.pages = (Array.isArray(d.pages) ? d.pages : []).map((p, i) => ({
             ...p,
@@ -6624,7 +6603,7 @@
             text: typeof p?.text === "string" ? p.text : "",
           }));
           d.aiSummary = null;
-          d.summaryProvider = "local";
+          d.summaryProvider = "source";
           d.aiError = "";
           d.warnings = (Array.isArray(d.warnings) ? d.warnings : []).filter(
             (warning) => !String(warning).startsWith("AI summary unavailable:"),
@@ -6635,7 +6614,7 @@
           try {
             d.overallSummary = buildOverallSummary(d);
           } catch (localError) {
-            console.error("[formXplain] Local summary generation failed:", localError);
+            console.error("[formXplain] Source highlight generation failed:", localError);
             d.overallSummary = {
               kind: "document",
               purpose: "Text was extracted, but automatic analysis could not be completed. Review the extracted text and original document.",
@@ -6644,7 +6623,7 @@
               importantPoints: [],
               dates: [],
               requirements: [],
-              warnings: ["Local analysis encountered an error. The original document remains the source of truth."],
+              warnings: ["Document analysis encountered an error. The original document remains the source of truth."],
               coverage: {
                 pagesRead: d.pages.length,
                 totalPages: d.pages.length,
@@ -6673,22 +6652,22 @@
           renderSummary();
           location.hash = "#summary";
           $("summaryButtonStatus").textContent =
-            "Local summary ready. Checking whether AI enhancement is available…";
+            "Source highlights ready. Generating AI Summary…";
         } catch (localError) {
-          console.error("[formXplain] Could not render local summary:", localError);
+          console.error("[formXplain] Could not render source highlights:", localError);
           $("summaryButtonStatus").textContent =
-            "Could not prepare the local summary: " + (localError?.message || "Unknown error");
+            "Could not prepare the summary: " + (localError?.message || "Unknown error");
           $("summaryButtonStatus").classList.add("error");
           return;
         } finally {
-          // Re-enable the button while Gemini runs; the local summary is already visible.
+          // Re-enable the button while AI Summary is generated.
           state.summaryBusy = false;
           btn.disabled = !state.doc;
           btn.innerHTML = '<i data-lucide="file-text"></i>Show Summary';
           icons();
         }
 
-        // AI is an enhancement, not a blocker. If it fails, keep the local summary.
+        // Keep source highlights available if AI Summary cannot be generated.
         try {
           const response = await fetch("/api/summarize", {
             method: "POST",
@@ -6708,14 +6687,14 @@
             throw new Error(`Summary service returned an unreadable response (HTTP ${response.status}).`);
           }
           if (!response.ok) {
-            throw new Error(payload.error || `Gemini summary request failed (HTTP ${response.status}).`);
+            throw new Error(payload.error || `AI Summary request failed (HTTP ${response.status}).`);
           }
           if (!payload.summary || typeof payload.summary !== "object") {
             throw new Error("The summary service returned no summary data.");
           }
           if (state.doc !== d) return;
           d.aiSummary = payload.summary;
-          d.summaryProvider = "gemini";
+          d.summaryProvider = "ai";
           d.aiError = "";
           d.warnings = (d.warnings || []).filter(
             (warning) => !String(warning).startsWith("AI summary unavailable:"),
@@ -6725,23 +6704,23 @@
           $("summaryButtonStatus").textContent =
             "AI-enhanced summary ready. Verify requirements against the original document.";
         } catch (aiError) {
-          console.warn("[formXplain] Gemini enhancement unavailable; keeping local summary:", aiError);
+          console.warn("[formXplain] AI Summary unavailable; keeping source highlights:", aiError);
           if (state.doc === d) {
             d.aiSummary = null;
-            d.summaryProvider = "local";
-            d.aiError = aiError?.message || "Gemini is unavailable.";
+            d.summaryProvider = "source";
+            d.aiError = aiError?.message || "AI Summary is unavailable."; 
             d.warnings = (d.warnings || []).filter(
               (warning) => !String(warning).startsWith("AI summary unavailable:"),
             );
             d.warnings.push(
-              `AI summary unavailable: ${d.aiError} A local summary is shown; verify it against the original document.`,
+              `AI Summary unavailable: ${d.aiError} Source highlights are shown; verify them against the original document.`,
             );
             try { renderSummary(); } catch (renderError) {
-              console.error("[formXplain] Could not refresh local summary warnings:", renderError);
+              console.error("[formXplain] Could not refresh summary warnings:", renderError);
             }
             $("summaryButtonStatus").classList.remove("error");
             $("summaryButtonStatus").textContent =
-              "Local summary ready. AI enhancement failed: " + d.aiError;
+              "AI Summary could not be generated: " + d.aiError;
           }
         }
       }
@@ -6753,7 +6732,7 @@
         if (a) {
           const out = [
             `formXplain summary — ${d.name}`,
-            `Source: ${d.summaryProvider === "gemini" ? "Google Gemini AI" : "Local fallback"}`,
+            `Source: ${d.summaryProvider === "ai" ? "AI Summary" : "Extracted document text"}`,
             "",
             `1. What is this form?\n${a.form || "Not clearly stated."}`,
             `\n2. Who needs to fill it?\n${a.who || "Not clearly stated."}`,
@@ -6776,7 +6755,7 @@
           );
           return out.join("\n");
         }
-        return `formXplain local fallback summary — ${d.name}\n\n${$("summaryOverallSections").innerText}`;
+        return `formXplain summary — ${d.name}\n\n${$("summaryOverallSections").innerText}`;
       }
       function summaryActionStatus(message) {
         $("summaryActionStatus").textContent = message;
@@ -6855,7 +6834,7 @@
         }
         if (!window.isSecureContext) {
           setCameraStatus(
-            "Camera access requires HTTPS or localhost. Open this app on localhost or use file upload.",
+            "Camera access requires a secure connection. Open the deployed app over HTTPS or use file upload.",
             true,
           );
           return;
